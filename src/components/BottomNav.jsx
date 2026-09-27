@@ -51,7 +51,7 @@ export default function BottomNav() {
                     <button onClick={() => setDrawerOpen(true)}
                         className="flex flex-col items-center py-1 px-3 rounded-2xl text-charcoal-400 active:scale-95 transition-all">
                         <Menu className="w-5 h-5" />
-                        <span className="text-[10px] mt-0.5 font-bold font-body">और</span>
+                        <span className="text-[10px] mt-0.5 font-bold font-body">{t("nav.more")}</span>
                     </button>
                 </div>
             </nav>
@@ -67,7 +67,7 @@ export default function BottomNav() {
                                 <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-terra-500 to-marigold-500 flex items-center justify-center">
                                     <Leaf className="w-4 h-4 text-white" />
                                 </div>
-                                <span className="font-heading font-bold text-charcoal-600">व्यापार बंधु</span>
+                                <span className="font-heading font-bold text-charcoal-600">{t("app.name")}</span>
                             </div>
                             <button onClick={() => setDrawerOpen(false)} className="p-1.5 rounded-full bg-warmgray-100 text-charcoal-400 hover:text-charcoal-600">
                                 <X className="w-5 h-5" />

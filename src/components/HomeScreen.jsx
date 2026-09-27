@@ -92,7 +92,7 @@ export default function HomeScreen() {
 
             {/* Trust footer */}
             <p className="text-center text-xs text-charcoal-300 font-body pb-2">
-                🌿 व्यापार बंधु — ग्रामीण उद्यमी निर्णय-सहायता प्रणाली • Built for SIH Hackathon Demo
+                {t("home.footer")}
             </p>
         </div>
     );

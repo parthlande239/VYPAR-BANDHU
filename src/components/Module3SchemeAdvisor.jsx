@@ -6,7 +6,7 @@ import { ExternalLink, Gift, ArrowRight, Filter, Sparkles } from "lucide-react";
 
 export default function Module3SchemeAdvisor() {
     const { profile, updateProfileField, setActiveScreen, triggerVoiceModal } = useApp();
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
     const [filter, setFilter] = useState("all");
 
     const filtered = GOVERNMENT_SCHEMES_LIST.filter((s) => filter === "all" || s.category === filter);
@@ -72,8 +72,8 @@ export default function Module3SchemeAdvisor() {
                     <div key={s.id} className="card-warm p-5 space-y-3 flex flex-col justify-between">
                         <div className="space-y-2">
                             <span className="badge bg-terra-500/10 text-terra-600 border border-terra-400/30 text-[10px]">{s.category}</span>
-                            <h3 className="font-heading text-base font-bold text-charcoal-600">{s.hindiName}</h3>
-                            <p className="text-xs text-charcoal-300 font-body">{s.name}</p>
+                            <h3 className="font-heading text-base font-bold text-charcoal-600">{t("schemes." + s.id, language === "hi" ? s.hindiName : s.name)}</h3>
+                            <p className="text-xs text-charcoal-300 font-body">{language === "hi" ? s.name : s.hindiName}</p>
                             <div className="grid grid-cols-2 gap-2 text-xs font-body pt-1">
                                 <div className="bg-cream-100 p-2.5 rounded-xl border border-warmgray-200">
                                     <span className="text-charcoal-300">{t("sch.maxLoan")}</span>

@@ -39,21 +39,17 @@ export default function SplashLanguage({ onDone }) {
             {/* Language grid */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full max-w-lg mb-8">
                 {languages.map((lang) => {
-                    const supported = lang.code === "hi" || lang.code === "en";
                     return (
                         <button
                             key={lang.code}
                             onClick={() => pick(lang.code)}
-                            className={`card-warm p-4 text-center space-y-1 group relative transition-all ${language === lang.code ? "!border-terra-500 !shadow-warm bg-terra-500/5" : ""
+                            className={`card-warm p-4 text-center space-y-1 group relative transition-all active:scale-95 ${language === lang.code ? "!border-terra-500 !shadow-warm bg-terra-500/5 ring-2 ring-terra-500/30" : ""
                                 }`}
                         >
                             <span className="font-heading text-lg font-bold text-charcoal-600 block group-hover:text-terra-500 transition-colors">
                                 {lang.native}
                             </span>
-                            <span className="text-[11px] text-charcoal-300 font-body block">{lang.en}</span>
-                            {!supported && (
-                                <span className="text-[9px] text-marigold-600 font-body font-semibold block">coming soon</span>
-                            )}
+                            <span className="text-[11px] text-charcoal-400 font-body block">{lang.en}</span>
                         </button>
                     );
                 })}

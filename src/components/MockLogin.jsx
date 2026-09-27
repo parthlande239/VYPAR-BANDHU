@@ -28,7 +28,7 @@ export default function MockLogin() {
                         <Leaf className="w-7 h-7 text-white stroke-[2.5]" />
                     </div>
                     <h1 className="font-heading text-2xl font-extrabold text-charcoal-600">
-                        व्यापार <span className="text-terra-500">बंधु</span>
+                        {t("app.name").split(" ")[0]} <span className="text-terra-500">{t("app.name").split(" ")[1] || ""}</span>
                     </h1>
                 </div>
 

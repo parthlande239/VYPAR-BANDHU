@@ -14,10 +14,12 @@ export const LanguageProvider = ({ children }) => {
         localStorage.setItem("preferred_language", lang);
     };
 
-    // Translation function
-    const t = (key) => {
-        const dict = translations[language] || translations["en"]; // Fallback to EN this time since user wants English correctly handled
-        return dict[key] || translations["en"][key] || key;
+    // Translation function with optional fallback
+    const t = (key, fallback) => {
+        const dict = translations[language] || translations["en"];
+        if (dict && dict[key]) return dict[key];
+        if (translations["en"] && translations["en"][key]) return translations["en"][key];
+        return fallback !== undefined ? fallback : key;
     };
 
     return (

@@ -49,7 +49,7 @@ export default function Module2FinancialCalculator() {
                         <h1 className="font-heading text-xl sm:text-2xl font-extrabold text-charcoal-600">
                             {t("fin.title")}
                         </h1>
-                        <p className="text-xs text-charcoal-300 font-body">{cat.icon} {cat.hindiName} • {t("fin.sub")}</p>
+                        <p className="text-xs text-charcoal-300 font-body">{cat.icon} {t("business.categories." + profile.businessCategoryKey, cat.name)} • {t("fin.sub")}</p>
                     </div>
                 </div>
             </div>
@@ -139,16 +139,16 @@ export default function Module2FinancialCalculator() {
                     <div className="flex items-center justify-between">
                         <span className="text-xs font-bold text-charcoal-300 uppercase tracking-wider font-body">{t("fin.loanDec")}</span>
                         <span className={`badge border ${dc}`}>
-                            {fin.loanDecisionCategory === "no_loan" ? "No Loan" : fin.loanDecisionCategory === "small_loan" ? "Small Loan" : "Loan Needed"}
+                            {fin.loanDecisionCategory === "no_loan" ? t("fin.decision.noLoan", "No Loan") : fin.loanDecisionCategory === "small_loan" ? t("fin.decision.smallLoan", "Small Loan") : t("fin.decision.loanNeeded", "Loan Needed")}
                         </span>
                     </div>
-                    <p className="font-heading text-base font-bold text-charcoal-600">{fin.loanDecisionText}</p>
+                    <p className="font-heading text-base font-bold text-charcoal-600">{t("fin.loanDecision." + fin.loanDecisionCategory, fin.loanDecisionText)}</p>
                     <div className="bg-cream-100 rounded-2xl p-3.5 border border-warmgray-200 space-y-1.5 text-xs text-charcoal-400 font-body">
-                        <div className="flex justify-between"><span>Total Need:</span><span className="font-bold text-charcoal-600">₹{fmt(fin.actualNeed)}</span></div>
-                        {fin.subsidy > 0 && <div className="flex justify-between text-purple-500"><span>Subsidy:</span><span>- ₹{fmt(fin.subsidy)}</span></div>}
-                        <div className="flex justify-between"><span>Own Savings:</span><span className="font-bold text-forest-600">- ₹{fmt(fin.capital)}</span></div>
+                        <div className="flex justify-between"><span>{t("fin.totalNeed", "Total Need")}:</span><span className="font-bold text-charcoal-600">₹{fmt(fin.actualNeed)}</span></div>
+                        {fin.subsidy > 0 && <div className="flex justify-between text-purple-500"><span>{t("fin.subsidyLabel", "Subsidy")}:</span><span>- ₹{fmt(fin.subsidy)}</span></div>}
+                        <div className="flex justify-between"><span>{t("fin.ownSavingsLabel", "Own Savings")}:</span><span className="font-bold text-forest-600">- ₹{fmt(fin.capital)}</span></div>
                         <div className="pt-1.5 border-t border-warmgray-200 flex justify-between font-bold text-sm text-charcoal-600">
-                            <span>Gap:</span>
+                            <span>{t("fin.gapLabel", "Loan Gap")}:</span>
                             <span className="text-terra-600">₹{fmt(fin.loanNeedGap)}</span>
                         </div>
                     </div>
@@ -182,7 +182,7 @@ export default function Module2FinancialCalculator() {
                     <span className="text-3xl">🏛️</span>
                     <div>
                         <p className="text-[11px] text-terra-500 font-bold uppercase tracking-wider font-body">{t("fin.selScheme")}</p>
-                        <h3 className="font-heading text-lg font-extrabold text-charcoal-600">{fin.selectedScheme.name}</h3>
+                        <h3 className="font-heading text-lg font-extrabold text-charcoal-600">{t("schemeTier." + fin.selectedScheme.id, fin.selectedScheme.name)}</h3>
                     </div>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs font-body">

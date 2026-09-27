@@ -10,11 +10,21 @@ export default function AskBandhu({ embedded = false }) {
     const { t } = useLanguage();
     const [isTyping, setIsTyping] = useState(false);
 
-    // Fallback UI string
+    // Localized greeting chips map
+    const greetingChips = {
+        en: ["New Business", "Need Loan", "Government Schemes", "Falling Sales"],
+        hi: ["नया व्यवसाय", "लोन चाहिए", "सरकारी योजनाएं", "बिक्री घट रही है"],
+        mr: ["नवीन व्यवसाय", "कर्ज हवे", "सरकारी योजना", "विक्री घटत आहे"],
+        ta: ["புதிய தொழில்", "கடன் வேண்டும்", "அரசு திட்டங்கள்", "விற்பனை குறைகிறது"],
+        te: ["కొత్త వ్యాపారం", "రుణం కావాలి", "ప్రభుత్వ పథకాలు", "అమ్మకాలు తగ్గాయి"],
+        bn: ["নতুন ব্যবসা", "ঋণ দরকার", "সরকারি প্রকল্প", "বিক্রয় কমছে"],
+        gu: ["નવો વ્યવસાય", "લોન જોઈએ", "સરકારી યોજના", "વેચાણ ઘટ્યું"],
+        kn: ["ಹೊಸ ವ್ಯಾಪಾರ", "ಸಾಲ ಬೇಕು", "ಸರ್ಕಾರಿ ಯೋಜನೆಗಳು", "ಮಾರಾಟ ಕಡಿಮೆಯಾಗಿದೆ"],
+    };
     const categoryName = profile.businessCategoryKey ? t(`business.categories.${profile.businessCategoryKey}`) : "";
-    const greeting = `${t("screen.chat.subtitle")}\n\n${profile.name || ""} - ${categoryName}\n\n${t("voice.tapToSpeak")}`;
+    const greeting = `${t("screen.chat.subtitle")}\n\n${profile.name ? `${profile.name} — ` : ""}${categoryName}\n\n${t("voice.tapToSpeak")}`;
     const [messages, setMessages] = useState([
-        { id: 1, from: "bot", text: greeting, chips: ["New Business", "Need Loan", "Government Schemes", "Falling Sales"] },
+        { id: 1, from: "bot", text: greeting, chips: greetingChips[language] || greetingChips.en },
     ]);
     const [input, setInput] = useState("");
     const endRef = useRef(null);
@@ -38,7 +48,7 @@ export default function AskBandhu({ embedded = false }) {
             const botMsg = {
                 id: Date.now() + 1,
                 from: "bot",
-                text: "Bandhu AI is temporarily unavailable. Please try again.",
+                text: t("chat.unavailable") || "Bandhu AI is temporarily unavailable. Please try again in a moment.",
                 isError: true,
                 retryText: userText
             };
@@ -96,10 +106,10 @@ export default function AskBandhu({ embedded = false }) {
                         {/* Navigation CTA */}
                         {msg.nav && (
                             <div className="ml-10 mt-1.5">
-                                <button onClick={() => handleNav(msg.nav)}
-                                    className="btn-primary !text-xs !px-3 !py-1.5 flex items-center gap-1">
-                                    खोलें <ArrowRight className="w-3 h-3" />
-                                </button>
+                                    <button onClick={() => handleNav(msg.nav)}
+                                        className="btn-primary !text-xs !px-3 !py-1.5 flex items-center gap-1">
+                                        {t("nav.open") || "खोलें"} <ArrowRight className="w-3 h-3" />
+                                    </button>
                             </div>
                         )}
                     </div>
@@ -120,7 +130,7 @@ export default function AskBandhu({ embedded = false }) {
             {/* Input */}
             <div className="p-3 border-t border-warmgray-200 bg-cream-50 shrink-0">
                 <div className="flex items-center gap-2 max-w-lg mx-auto">
-                    <button onClick={() => triggerVoiceModal("बंधु चैट")}
+                    <button onClick={() => triggerVoiceModal(t("chat.title") || "बंधु चैट")}
                         className="p-2.5 bg-terra-500/10 text-terra-600 rounded-xl border border-terra-400/30 shrink-0 active:scale-95">
                         <Mic className="w-4 h-4" />
                     </button>
@@ -150,7 +160,7 @@ export default function AskBandhu({ embedded = false }) {
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-terra-500 to-marigold-500 flex items-center justify-center text-white text-xl shadow-warm-sm">🤝</div>
                             <div>
-                                <h2 className="font-heading text-base font-bold text-charcoal-600">बंधु से बात करें (Ask Bandhu)</h2>
+                                <h2 className="font-heading text-base font-bold text-charcoal-600">{t("chat.title") || "बंधु से बात करें (Ask Bandhu)"}</h2>
                                 <p className="text-xs text-charcoal-300 font-body">AI-Powered Business Assistant</p>
                             </div>
                         </div>
@@ -176,8 +186,8 @@ export default function AskBandhu({ embedded = false }) {
                     <div className="flex items-center gap-2.5">
                         <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-terra-500 to-marigold-500 flex items-center justify-center text-white text-sm shadow-warm-sm shrink-0">🤝</div>
                         <div>
-                            <span className="font-heading text-sm font-bold text-charcoal-600">बंधु चैट</span>
-                            <span className="text-[10px] text-forest-500 font-body ml-1.5 flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-forest-500 inline-block animate-pulse"></span>ऑनलाइन</span>
+                            <span className="font-heading text-sm font-bold text-charcoal-600">{t("chat.title") || "बंधु चैट"}</span>
+                            <span className="text-[10px] text-forest-500 font-body ml-1.5 flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-forest-500 inline-block animate-pulse"></span>{t("chat.online") || "ऑनलाइन"}</span>
                         </div>
                     </div>
                     <button onClick={() => setIsChatOpen(false)} className="p-1.5 rounded-full bg-warmgray-100 text-charcoal-400 hover:text-charcoal-600">

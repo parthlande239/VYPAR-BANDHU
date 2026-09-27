@@ -50,12 +50,12 @@ function PageHeader({ title, subtitle }) {
                     className="flex items-center gap-1 text-terra-500 bg-terra-500/10 border border-terra-400/30 px-2.5 py-1.5 rounded-xl text-xs font-bold font-body active:scale-95">
                     <Mic className="w-3.5 h-3.5" /> {t("phrase.speakShort")}
                 </button>
-                <div className="flex items-center bg-warmgray-100 rounded-xl px-2 py-1.5 border border-warmgray-200 md:hidden">
-                    <Globe className="w-3 h-3 text-charcoal-300 mr-1 shrink-0" />
+                <div className="flex items-center bg-warmgray-100 hover:bg-warmgray-200/80 rounded-xl px-2.5 py-1.5 border border-warmgray-200 transition-colors shadow-warm-sm">
+                    <Globe className="w-3.5 h-3.5 text-charcoal-400 mr-1.5 shrink-0" />
                     <select value={language} onChange={(e) => setLanguage(e.target.value)}
-                        className="bg-transparent text-[11px] font-semibold text-charcoal-600 font-body focus:outline-none w-20 line-clamp-1">
+                        className="bg-transparent text-xs font-bold text-charcoal-600 font-body focus:outline-none cursor-pointer">
                         {SUPPORTED_LANGUAGES.map(lang => (
-                            <option key={lang.code} value={lang.code}>{lang.native}</option>
+                            <option key={lang.code} value={lang.code}>{lang.native} ({lang.en})</option>
                         ))}
                     </select>
                 </div>

@@ -2,14 +2,14 @@ import React from "react";
 import { useApp } from "../context/AppContext";
 import {
     Home, Store, Calculator, Landmark,
-    FileText, MessageSquare, UserCheck, Settings, LogOut, Leaf
+    FileText, MessageSquare, UserCheck, Settings, LogOut, Leaf, Globe
 } from "lucide-react";
 
 import { useLanguage } from "../context/LanguageContext";
 
 export default function Sidebar() {
     const { activeScreen, setActiveScreen, profile, logout, businesses, currentBusinessId, setCurrentBusinessId, addBusiness } = useApp();
-    const { t } = useLanguage();
+    const { t, language, setLanguage } = useLanguage();
 
     const navItems = [
         { id: "home", label: t("nav.home"), icon: Home },
@@ -31,7 +31,7 @@ export default function Sidebar() {
                     </div>
                     <div>
                         <h1 className="font-heading font-extrabold text-xl text-charcoal-600 leading-none">
-                            व्यापार <span className="text-terra-500">बंधु</span>
+                            {t("app.name").split(" ")[0]} <span className="text-terra-500">{t("app.name").split(" ")[1] || ""}</span>
                         </h1>
                         <p className="text-[10px] text-charcoal-300 font-body font-medium leading-none mt-1">
                             Your business, made simple
@@ -94,12 +94,29 @@ export default function Sidebar() {
                 })}
             </nav>
 
-            {/* Footer / Settings */}
+            {/* Footer / Language & Settings */}
             <div className="p-4 border-t border-warmgray-200 shrink-0 space-y-2">
-                <button onClick={() => setActiveScreen("settings")} className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl font-body text-sm font-semibold transition-colors ${activeScreen === "settings" ? "bg-terra-500/10 text-terra-600 border border-terra-500/20" : "text-charcoal-500 hover:bg-warmgray-100"}`}>
+                <div className="flex items-center gap-2 bg-warmgray-100 rounded-xl px-2.5 py-1.5 border border-warmgray-200 shadow-inner">
+                    <Globe className="w-3.5 h-3.5 text-charcoal-400 shrink-0" />
+                    <select
+                        value={language}
+                        onChange={(e) => setLanguage(e.target.value)}
+                        className="bg-transparent text-xs font-bold text-charcoal-600 font-body focus:outline-none w-full cursor-pointer"
+                    >
+                        <option value="hi">हिन्दी (Hindi)</option>
+                        <option value="en">English</option>
+                        <option value="mr">मराठी (Marathi)</option>
+                        <option value="ta">தமிழ் (Tamil)</option>
+                        <option value="te">తెలుగు (Telugu)</option>
+                        <option value="bn">বাংলা (Bengali)</option>
+                        <option value="gu">ગુજરાતી (Gujarati)</option>
+                        <option value="kn">ಕನ್ನಡ (Kannada)</option>
+                    </select>
+                </div>
+                <button onClick={() => setActiveScreen("settings")} className={`w-full flex items-center gap-3 px-4 py-2 rounded-xl font-body text-sm font-semibold transition-colors ${activeScreen === "settings" ? "bg-terra-500/10 text-terra-600 border border-terra-500/20" : "text-charcoal-500 hover:bg-warmgray-100"}`}>
                     <Settings className="w-4 h-4 text-charcoal-400" /> {t("nav.settings")}
                 </button>
-                <button onClick={logout} className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-red-500 hover:bg-red-50 font-body text-sm font-semibold transition-colors">
+                <button onClick={logout} className="w-full flex items-center gap-3 px-4 py-2 rounded-xl text-red-500 hover:bg-red-50 font-body text-sm font-semibold transition-colors">
                     <LogOut className="w-4 h-4 text-red-400" /> {t("nav.logout")}
                 </button>
             </div>

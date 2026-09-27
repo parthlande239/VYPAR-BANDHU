@@ -39,7 +39,7 @@ export default function ConversationalIntake() {
                     <ArrowLeft className="w-4 h-4" /> {t("btn.back")}
                 </button>
                 <span className="font-heading text-sm font-bold text-terra-500">
-                    Step {step} / {total}
+                    {t("intake.step")} {step} / {total}
                 </span>
                 <button
                     onClick={() => triggerVoiceModal(`Step ${step}`)}
@@ -75,22 +75,22 @@ export default function ConversationalIntake() {
                 {step === 1 && (
                     <div className="space-y-4">
                         <div>
-                            <label className="block text-xs font-semibold text-charcoal-400 mb-1.5 font-body">आपका नाम</label>
+                            <label className="block text-xs font-semibold text-charcoal-400 mb-1.5 font-body">{t("intake.label.name")}</label>
                             <input
                                 type="text" value={profile.name}
                                 onChange={(e) => updateProfileField("name", e.target.value)}
-                                placeholder="उदा. रमेश कुमार"
+                                placeholder={t("intake.placeholder.name")}
                                 className="w-full bg-warmgray-100 border border-warmgray-200 rounded-2xl px-4 py-3 text-charcoal-600 focus:outline-none focus:ring-2 focus:ring-terra-500/30 focus:border-terra-500 text-sm font-body"
                             />
                         </div>
                         <div>
-                            <label className="block text-xs font-semibold text-charcoal-400 mb-1.5 font-body">गाँव / ब्लॉक / जिला</label>
+                            <label className="block text-xs font-semibold text-charcoal-400 mb-1.5 font-body">{t("intake.label.location")}</label>
                             <div className="relative">
                                 <MapPin className="w-4 h-4 text-charcoal-300 absolute left-3.5 top-3.5" />
                                 <input
                                     type="text" value={profile.location}
                                     onChange={(e) => updateProfileField("location", e.target.value)}
-                                    placeholder="उदा. पिपरिया, होशंगाबाद"
+                                    placeholder={t("intake.placeholder.location")}
                                     className="w-full bg-warmgray-100 border border-warmgray-200 rounded-2xl pl-10 pr-4 py-3 text-charcoal-600 focus:outline-none focus:ring-2 focus:ring-terra-500/30 focus:border-terra-500 text-sm font-body"
                                 />
                             </div>
@@ -124,7 +124,7 @@ export default function ConversationalIntake() {
                         </div>
 
                         <div>
-                            <label className="block text-xs font-semibold text-charcoal-400 mb-2 font-body">व्यवसाय श्रेणी चुनें</label>
+                            <label className="block text-xs font-semibold text-charcoal-400 mb-2 font-body">{t("intake.label.selectCategory")}</label>
                             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
                                 {Object.entries(BUSINESS_CATEGORIES).map(([key, cat]) => (
                                     <button key={key} onClick={() => selectBusinessCategory(key)}
@@ -134,7 +134,7 @@ export default function ConversationalIntake() {
                                                 : "border-warmgray-200 bg-white hover:border-warmgray-300"}`}
                                     >
                                         <span className="text-2xl block mb-1">{cat.icon}</span>
-                                        <div className="font-heading text-xs font-bold text-charcoal-600 leading-snug">{cat.hindiName}</div>
+                                        <div className="font-heading text-xs font-bold text-charcoal-600 leading-snug">{t("business.categories." + key) || cat.hindiName}</div>
                                         <div className="text-[10px] text-charcoal-300 font-body mt-0.5">{cat.name}</div>
                                     </button>
                                 ))}
@@ -148,7 +148,7 @@ export default function ConversationalIntake() {
                     <div className="space-y-4">
                         <div>
                             <label className="block text-xs font-semibold text-charcoal-400 mb-1.5 font-body">
-                                स्वयं की बचत पूंजी (Own Savings)
+                                {t("intake.label.ownSavings")}
                             </label>
                             <div className="relative">
                                 <span className="absolute left-4 top-3 text-terra-500 font-bold text-base">₹</span>
@@ -159,20 +159,20 @@ export default function ConversationalIntake() {
                             </div>
                             <p className="text-xs text-terra-500 mt-1.5 flex items-center gap-1 font-body">
                                 <Sparkles className="w-3.5 h-3.5" />
-                                ₹{(profile.ownCapital || 0).toLocaleString("en-IN")} बचत = ₹{((profile.ownCapital || 0) / 0.1).toLocaleString("en-IN")} प्रोजेक्ट क्षमता
+                                ₹{(profile.ownCapital || 0).toLocaleString("en-IN")} {t("intake.label.savings")} = ₹{((profile.ownCapital || 0) / 0.1).toLocaleString("en-IN")} {t("intake.label.projectCapacity")}
                             </p>
                         </div>
                         {profile.businessType === "existing" && (
                             <div className="grid grid-cols-2 gap-3">
                                 <div>
-                                    <label className="block text-xs font-semibold text-charcoal-400 mb-1 font-body">मासिक आय</label>
+                                    <label className="block text-xs font-semibold text-charcoal-400 mb-1 font-body">{t("intake.label.monthlyIncome")}</label>
                                     <input type="number" value={profile.currentMonthlyIncome}
                                         onChange={(e) => updateProfileField("currentMonthlyIncome", Number(e.target.value))}
                                         className="w-full bg-warmgray-100 border border-warmgray-200 rounded-2xl px-3 py-2.5 text-sm font-body"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-semibold text-charcoal-400 mb-1 font-body">मासिक खर्च</label>
+                                    <label className="block text-xs font-semibold text-charcoal-400 mb-1 font-body">{t("intake.label.monthlyExpense")}</label>
                                     <input type="number" value={profile.currentMonthlyExpenses}
                                         onChange={(e) => updateProfileField("currentMonthlyExpenses", Number(e.target.value))}
                                         className="w-full bg-warmgray-100 border border-warmgray-200 rounded-2xl px-3 py-2.5 text-sm font-body"
@@ -187,12 +187,12 @@ export default function ConversationalIntake() {
                 {step === 4 && (
                     <div className="space-y-4">
                         <label className="block text-xs font-semibold text-charcoal-400 mb-2 font-body">
-                            क्या कोई पिछला ऋण बकाया है?
+                            {t("intake.label.existingLoan")}
                         </label>
                         <div className="grid grid-cols-2 gap-3">
                             {[
-                                { val: false, label: "नहीं (No)", emoji: "✅" },
-                                { val: true, label: "हाँ (Yes)", emoji: "📋" },
+                                { val: false, label: t("intake.opt.no"), emoji: "✅" },
+                                { val: true, label: t("intake.opt.yes"), emoji: "📋" },
                             ].map((o) => (
                                 <button key={String(o.val)} onClick={() => updateProfileField("hasExistingLoan", o.val)}
                                     className={`p-4 rounded-2xl border-2 text-center font-heading font-bold transition-all active:scale-[0.97]
@@ -207,7 +207,7 @@ export default function ConversationalIntake() {
                         </div>
                         {profile.hasExistingLoan && (
                             <div>
-                                <label className="block text-xs font-semibold text-charcoal-400 mb-1 font-body">मासिक किश्त राशि</label>
+                                <label className="block text-xs font-semibold text-charcoal-400 mb-1 font-body">{t("intake.label.emiAmount")}</label>
                                 <input type="number" value={profile.existingLoanAmount}
                                     onChange={(e) => updateProfileField("existingLoanAmount", Number(e.target.value))}
                                     placeholder="₹ 2,000"

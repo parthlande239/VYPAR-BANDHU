@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useApp } from "../context/AppContext";
+import { useLanguage } from "../context/LanguageContext";
 import { BUSINESS_CATEGORIES } from "../config/businessRules";
 import {
     Users, CheckCircle, AlertCircle, TrendingUp, ShieldAlert,
@@ -8,6 +9,7 @@ import {
 
 export default function Module1Feasibility() {
     const { profile, selectBusinessCategory, setActiveScreen } = useApp();
+    const { t } = useLanguage();
     const [radius, setRadius] = useState(5);
 
     const key = profile.businessCategoryKey || "dairy";
@@ -22,7 +24,7 @@ export default function Module1Feasibility() {
             {/* Sample-data badge */}
             <div className="flex items-center gap-2 bg-marigold-500/10 border border-marigold-400/30 rounded-2xl px-4 py-3 text-xs text-marigold-600 font-semibold font-body">
                 <Info className="w-4 h-4 shrink-0" />
-                <span><strong>Sample data — for demo purposes.</strong> यह बाज़ार डेटा अनुमानित सैम्पल है।</span>
+                <span>{t("feas.sampleNotice")}</span>
             </div>
 
             {/* Header */}
@@ -31,20 +33,20 @@ export default function Module1Feasibility() {
                     <div className="flex items-center gap-3">
                         <span className="text-4xl">{cat.icon}</span>
                         <div>
-                            <h1 className="font-heading text-2xl font-extrabold text-charcoal-600">{cat.hindiName}</h1>
-                            <p className="text-xs text-charcoal-300 font-body">{cat.name} • बाज़ार संभावना विश्लेषण</p>
+                            <h1 className="font-heading text-2xl font-extrabold text-charcoal-600">{t("business.categories." + key) || cat.hindiName}</h1>
+                            <p className="text-xs text-charcoal-300 font-body">{cat.name} • {t("feas.marketAnalysis")}</p>
                         </div>
                     </div>
                     <select value={key} onChange={(e) => selectBusinessCategory(e.target.value)}
                         className="bg-warmgray-100 text-sm font-body font-semibold text-charcoal-500 px-3 py-2 rounded-2xl border border-warmgray-200 focus:outline-none focus:ring-2 focus:ring-terra-500/30 cursor-pointer">
                         {Object.entries(BUSINESS_CATEGORIES).map(([k, c]) => (
-                            <option key={k} value={k}>{c.icon} {c.hindiName}</option>
+                            <option key={k} value={k}>{c.icon} {t("business.categories." + k) || c.hindiName}</option>
                         ))}
                     </select>
                 </div>
                 {profile.location && (
                     <p className="text-sm text-charcoal-400 mt-3 font-body">
-                        📍 स्थान: <strong className="text-charcoal-600">{profile.location || "आपका गाँव"}</strong> के आसपास
+                        📍 {t("feas.location")} <strong className="text-charcoal-600">{profile.location || t("feas.yourVillage")}</strong> {t("feas.nearby")}
                     </p>
                 )}
             </div>
@@ -54,7 +56,7 @@ export default function Module1Feasibility() {
                 <div className="card-warm p-5 space-y-3">
                     <div className="flex items-center justify-between">
                         <h3 className="font-heading text-sm font-bold text-charcoal-500 flex items-center gap-1.5">
-                            <Users className="w-4 h-4 text-forest-500" /> ग्राहक पहुँच
+                            <Users className="w-4 h-4 text-forest-500" /> {t("feas.customerReach")}
                         </h3>
                         <div className="flex bg-warmgray-100 rounded-xl p-0.5 text-xs border border-warmgray-200">
                             {[5, 10].map((r) => (
@@ -68,7 +70,7 @@ export default function Module1Feasibility() {
                     <div className="bg-cream-100 rounded-2xl p-4 border border-warmgray-200 flex items-center justify-between">
                         <div>
                             <p className="text-3xl font-heading font-extrabold text-charcoal-600">~{reach.toLocaleString("en-IN")}</p>
-                            <p className="text-xs text-charcoal-300 font-body">संभावित ग्राहक परिवार</p>
+                            <p className="text-xs text-charcoal-300 font-body">{t("feas.potentialCustomers")}</p>
                         </div>
                         <span className="text-3xl">🎯</span>
                     </div>
@@ -77,13 +79,13 @@ export default function Module1Feasibility() {
                 <div className="card-warm p-5 space-y-3">
                     <div className="flex items-center justify-between">
                         <h3 className="font-heading text-sm font-bold text-charcoal-500 flex items-center gap-1.5">
-                            <Compass className="w-4 h-4 text-blue-500" /> प्रतिस्पर्धा स्तर
+                            <Compass className="w-4 h-4 text-blue-500" /> {t("feas.competitorLevel")}
                         </h3>
                         <span className={`badge border ${dc}`}>{cat.competitorDensity}</span>
                     </div>
                     <div className="bg-cream-100 rounded-2xl p-4 border border-warmgray-200 space-y-2">
                         <p className="text-xs text-charcoal-400 font-body">
-                            {cat.competitorDensity === "Low" ? "कम प्रतिस्पर्धी — बेहतरीन अवसर!" : cat.competitorDensity === "Medium" ? "3-5 प्रतिस्पर्धी — गुणवत्ता से आगे बढ़ें" : "6+ प्रतिस्पर्धी — विशिष्ट पहचान ज़रूरी"}
+                            {cat.competitorDensity === "Low" ? t("feas.densityLow") : cat.competitorDensity === "Medium" ? t("feas.densityMedium") : t("feas.densityHigh")}
                         </p>
                         <div className="w-full bg-warmgray-200 h-2.5 rounded-full overflow-hidden">
                             <div className={`h-full rounded-full ${cat.densityBadgeColor === "green" ? "bg-forest-500 w-1/3" : cat.densityBadgeColor === "yellow" ? "bg-marigold-500 w-2/3" : "bg-red-500 w-full"}`} />
@@ -95,7 +97,7 @@ export default function Module1Feasibility() {
             {/* Opportunities */}
             <div className="card-warm p-5 space-y-3">
                 <h3 className="font-heading text-sm font-bold text-charcoal-500 flex items-center gap-1.5">
-                    <Sparkles className="w-4 h-4 text-marigold-500" /> अवसर खोजक (Opportunity Finder)
+                    <Sparkles className="w-4 h-4 text-marigold-500" /> {t("feas.opportunityFinder")}
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {cat.opportunities.map((opp, i) => (
@@ -110,10 +112,10 @@ export default function Module1Feasibility() {
             {/* SWOT — 4 color-coded cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {[
-                    { title: "क्या अच्छा है", en: "What's good", text: cat.swot.good, color: "border-forest-400/30 bg-forest-500/5", icon: CheckCircle, iconColor: "text-forest-500" },
-                    { title: "क्या कठिन है", en: "What's difficult", text: cat.swot.difficult, color: "border-marigold-400/30 bg-marigold-500/5", icon: AlertCircle, iconColor: "text-marigold-600" },
-                    { title: "कहाँ अवसर है", en: "Opportunity", text: cat.swot.opportunity, color: "border-blue-400/30 bg-blue-500/5", icon: TrendingUp, iconColor: "text-blue-500" },
-                    { title: "क्या गड़बड़ हो सकती है", en: "Watch out for", text: cat.swot.wrong, color: "border-red-400/30 bg-red-500/5", icon: ShieldAlert, iconColor: "text-red-500" },
+                    { title: t("feas.swot.good"), en: "What's good", text: cat.swot.good, color: "border-forest-400/30 bg-forest-500/5", icon: CheckCircle, iconColor: "text-forest-500" },
+                    { title: t("feas.swot.difficult"), en: "What's difficult", text: cat.swot.difficult, color: "border-marigold-400/30 bg-marigold-500/5", icon: AlertCircle, iconColor: "text-marigold-600" },
+                    { title: t("feas.swot.opportunity"), en: "Opportunity", text: cat.swot.opportunity, color: "border-blue-400/30 bg-blue-500/5", icon: TrendingUp, iconColor: "text-blue-500" },
+                    { title: t("feas.swot.threat"), en: "Watch out for", text: cat.swot.wrong, color: "border-red-400/30 bg-red-500/5", icon: ShieldAlert, iconColor: "text-red-500" },
                 ].map((s, i) => {
                     const Icon = s.icon;
                     return (
@@ -133,13 +135,13 @@ export default function Module1Feasibility() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="card-warm p-5 space-y-3">
                     <h3 className="font-heading text-sm font-bold text-charcoal-500 flex items-center gap-1.5">
-                        <Tag className="w-4 h-4 text-terra-500" /> मूल्य सलाह
+                        <Tag className="w-4 h-4 text-terra-500" /> {t("feas.priceAdvice")}
                     </h3>
                     <div className="bg-cream-100 rounded-2xl p-4 border border-warmgray-200 space-y-2">
-                        <p className="text-xs text-charcoal-300 font-body">बाज़ार दर:</p>
+                        <p className="text-xs text-charcoal-300 font-body">{t("feas.marketRate")}</p>
                         <p className="text-sm font-bold text-charcoal-600 font-body">{cat.priceRange}</p>
                         <div className="pt-2 border-t border-warmgray-200">
-                            <p className="text-xs text-terra-500 font-semibold font-body">अनुशंसित शुरुआती दाम:</p>
+                            <p className="text-xs text-terra-500 font-semibold font-body">{t("feas.suggestedPrice")}</p>
                             <p className="text-base font-heading font-extrabold text-terra-600 mt-0.5">{cat.suggestedStartingPrice}</p>
                         </div>
                     </div>
@@ -148,7 +150,7 @@ export default function Module1Feasibility() {
                 <div className="card-warm p-5 space-y-3">
                     <div className="flex items-center justify-between">
                         <h3 className="font-heading text-sm font-bold text-charcoal-500 flex items-center gap-1.5">
-                            <Calendar className="w-4 h-4 text-purple-500" /> मौसमी कैलेंडर
+                            <Calendar className="w-4 h-4 text-purple-500" /> {t("feas.seasonCalendar")}
                         </h3>
                         <div className="flex items-center gap-2 text-[10px] font-body">
                             <span className="flex items-center gap-1 text-forest-500"><span className="w-2 h-2 rounded-full bg-forest-500" /> High</span>
@@ -171,13 +173,13 @@ export default function Module1Feasibility() {
             <div className="bg-gradient-to-r from-terra-500 to-marigold-500 rounded-3xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-warm-lg text-white">
                 <div>
                     <h3 className="font-heading text-lg font-bold">
-                        अब लोन और किश्त की गणना करें 🧮
+                        {t("feas.ctaTitle")}
                     </h3>
-                    <p className="text-xs text-white/80 mt-0.5 font-body">सटीक EMI, सरकारी ब्याज दर एवं सुरक्षित ऋण राशि देखें।</p>
+                    <p className="text-xs text-white/80 mt-0.5 font-body">{t("feas.ctaSub")}</p>
                 </div>
                 <button onClick={() => setActiveScreen("finance")}
                     className="w-full sm:w-auto shrink-0 bg-white text-terra-600 font-heading font-bold px-6 py-3 rounded-2xl shadow-warm flex items-center justify-center gap-2 text-sm active:scale-95 transition-all hover:shadow-warm-lg">
-                    लोन देखें <ArrowRight className="w-4 h-4 stroke-[2.5]" />
+                    {t("feas.viewLoan")} <ArrowRight className="w-4 h-4 stroke-[2.5]" />
                 </button>
             </div>
         </div>

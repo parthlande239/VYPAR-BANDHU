@@ -1,9 +1,11 @@
 import React from "react";
 import { useApp } from "../context/AppContext";
+import { useLanguage } from "../context/LanguageContext";
 import { Mic, Globe, Home, Leaf } from "lucide-react";
 
 export default function Navbar() {
-    const { activeScreen, setActiveScreen, language, setLanguage, triggerVoiceModal } = useApp();
+    const { activeScreen, setActiveScreen, triggerVoiceModal } = useApp();
+    const { language, setLanguage, t } = useLanguage();
 
     return (
         <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-warmgray-200 shadow-warm-sm">
@@ -18,7 +20,7 @@ export default function Navbar() {
                     </div>
                     <div className="text-left">
                         <span className="font-heading font-extrabold text-lg text-charcoal-600 leading-none tracking-tight">
-                            व्यापार <span className="text-terra-500">बंधु</span>
+                            {t("app.name").split(" ")[0]} <span className="text-terra-500">{t("app.name").split(" ")[1] || ""}</span>
                         </span>
                         <p className="text-[10px] text-charcoal-300 font-body font-medium leading-none mt-0.5">
                             Your business, made simple
@@ -30,11 +32,11 @@ export default function Navbar() {
                 <div className="flex items-center gap-2">
                     {/* Voice */}
                     <button
-                        onClick={() => triggerVoiceModal("सहायता मांगें")}
+                        onClick={() => triggerVoiceModal(t("voice.askHelp"))}
                         className="flex items-center gap-1.5 bg-terra-500 hover:bg-terra-600 active:scale-95 text-white font-heading font-bold text-xs px-3 py-2 rounded-2xl shadow-warm-sm transition-all"
                     >
                         <Mic className="w-3.5 h-3.5" />
-                        <span className="hidden sm:inline">बोलिए</span>
+                        <span className="hidden sm:inline">{t("nav.speak")}</span>
                     </button>
 
                     {/* Language */}
@@ -45,9 +47,14 @@ export default function Navbar() {
                             onChange={(e) => setLanguage(e.target.value)}
                             className="bg-transparent text-xs font-semibold text-charcoal-500 focus:outline-none cursor-pointer font-body"
                         >
-                            <option value="hi">हिंदी</option>
+                            <option value="hi">हिन्दी</option>
                             <option value="en">English</option>
                             <option value="mr">मराठी</option>
+                            <option value="ta">தமிழ்</option>
+                            <option value="te">తెలుగు</option>
+                            <option value="bn">বাংলা</option>
+                            <option value="gu">ગુજરાતી</option>
+                            <option value="kn">ಕನ್ನಡ</option>
                         </select>
                     </div>
 

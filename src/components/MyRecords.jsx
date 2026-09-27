@@ -9,12 +9,12 @@ import {
 
 /* ── Tab definitions ── */
 const TABS = [
-    { id: "sales", icon: TrendingUp, label: "बिक्री (Sales)" },
-    { id: "purchases", icon: ShoppingCart, label: "खरीद / खर्च" },
-    { id: "inventory", icon: Package, label: "स्टॉक (Inventory)" },
-    { id: "contacts", icon: Users, label: "ग्राहक / आपूर्तिकर्ता" },
-    { id: "ledgers", icon: BookOpen, label: "उधारी / देनदारी" },
-    { id: "health", icon: Activity, label: "स्वास्थ्य स्कोर" },
+    { id: "sales", icon: TrendingUp },
+    { id: "purchases", icon: ShoppingCart },
+    { id: "inventory", icon: Package },
+    { id: "contacts", icon: Users },
+    { id: "ledgers", icon: BookOpen },
+    { id: "health", icon: Activity },
 ];
 
 /* ── Helpers ── */
@@ -45,17 +45,17 @@ export default function MyRecords() {
     }, [cashFlow, totalSales, totalPurchases, lowStockItems, pendingReceivables, pendingPayables]);
 
     const healthColor = healthScore >= 70 ? "#2E7D52" : healthScore >= 45 ? "#E89B1C" : "#DC2626";
-    const healthLabel = healthScore >= 70 ? "अच्छा (Good)" : healthScore >= 45 ? "ठीक-ठाक (Fair)" : "चिंताजनक (Needs Attention)";
+    const healthLabel = healthScore >= 70 ? t("rec.healthLabel.good", "Good") : healthScore >= 45 ? t("rec.healthLabel.fair", "Fair") : t("rec.healthLabel.poor", "Needs Attention");
 
     /* ── Early warnings (pattern-based) ── */
     const warnings = useMemo(() => {
         const w = [];
-        if (lowStockItems.length > 0) w.push(`⚠️ ${lowStockItems.length} आइटम का स्टॉक कम है — तुरंत ऑर्डर करें!`);
-        if (pendingReceivables.length > 0) w.push(`📋 ₹${fmt(pendingReceivables.reduce((s, e) => s + e.amount, 0))} उधारी बकाया है — वसूली करें!`);
-        if (cashFlow < 0) w.push("🔴 आपका कैश फ्लो नकारात्मक है — खर्च बिक्री से अधिक!");
-        if (totalSales < totalPurchases) w.push("📉 इस अवधि में बिक्री खरीद से कम है — मार्केटिंग बढ़ाएं!");
+        if (lowStockItems.length > 0) w.push(`⚠️ ${lowStockItems.length} ${t("rec.warn.lowStock", "items have low stock — reorder immediately!")}`);
+        if (pendingReceivables.length > 0) w.push(`📋 ₹${fmt(pendingReceivables.reduce((s, e) => s + e.amount, 0))} ${t("rec.warn.creditDue", "credit pending — collect now!")}`);
+        if (cashFlow < 0) w.push(`🔴 ${t("rec.warn.negativeCash", "Your cash flow is negative — expenses exceed sales!")}`);
+        if (totalSales < totalPurchases) w.push(`📉 ${t("rec.warn.salesLow", "Sales are lower than purchases this period — increase marketing!")}`);
         return w;
-    }, [lowStockItems, pendingReceivables, cashFlow, totalSales, totalPurchases]);
+    }, [lowStockItems, pendingReceivables, cashFlow, totalSales, totalPurchases, t]);
 
     /* ── Data mutation helpers ── */
     const addSale = () => {
@@ -169,7 +169,7 @@ export default function MyRecords() {
                             <div key={s.id} className="bg-warmgray-100 rounded-xl p-3 border border-warmgray-200 flex flex-col sm:flex-row gap-2 sm:items-center">
                                 <input type="date" value={s.date} onChange={(e) => updateField("sales", s.id, "date", e.target.value)}
                                     className="bg-white border border-warmgray-200 rounded-lg px-2 py-1.5 text-xs font-body w-full sm:w-32" />
-                                <input type="text" value={s.item} onChange={(e) => updateField("sales", s.id, "item", e.target.value)} placeholder="आइटम"
+                                <input type="text" value={s.item} onChange={(e) => updateField("sales", s.id, "item", e.target.value)} placeholder={t("rec.placeholder.item", "Item")}
                                     className="bg-white border border-warmgray-200 rounded-lg px-2 py-1.5 text-xs font-body flex-1" />
                                 <input type="number" value={s.qty} onChange={(e) => updateField("sales", s.id, "qty", Number(e.target.value))} placeholder="Qty"
                                     className="bg-white border border-warmgray-200 rounded-lg px-2 py-1.5 text-xs font-body w-16" />
@@ -182,7 +182,7 @@ export default function MyRecords() {
                             </div>
                         ))}
                     </div>
-                    <p className="text-xs text-charcoal-300 font-body text-right">कुल: <strong className="text-forest-600">₹{fmt(totalSales)}</strong></p>
+                    <p className="text-xs text-charcoal-300 font-body text-right">{t("rec.total", "Total:")} <strong className="text-forest-600">₹{fmt(totalSales)}</strong></p>
                 </div>
             )}
 
@@ -200,9 +200,12 @@ export default function MyRecords() {
                                     className="bg-white border border-warmgray-200 rounded-lg px-2 py-1.5 text-xs font-body w-full sm:w-32" />
                                 <select value={p.category} onChange={(e) => updateField("purchases", p.id, "category", e.target.value)}
                                     className="bg-white border border-warmgray-200 rounded-lg px-2 py-1.5 text-xs font-body w-full sm:w-28">
-                                    <option value="stock">स्टॉक</option><option value="rent">किराया</option><option value="utilities">बिजली/पानी</option><option value="other">अन्य</option>
+                                    <option value="stock">{t("rec.cat.stock", "Stock")}</option>
+                                    <option value="rent">{t("rec.cat.rent", "Rent")}</option>
+                                    <option value="utilities">{t("rec.cat.utilities", "Utilities")}</option>
+                                    <option value="other">{t("rec.cat.other", "Other")}</option>
                                 </select>
-                                <input type="text" value={p.item} onChange={(e) => updateField("purchases", p.id, "item", e.target.value)} placeholder="विवरण"
+                                <input type="text" value={p.item} onChange={(e) => updateField("purchases", p.id, "item", e.target.value)} placeholder={t("rec.placeholder.desc", "Description")}
                                     className="bg-white border border-warmgray-200 rounded-lg px-2 py-1.5 text-xs font-body flex-1" />
                                 <div className="relative">
                                     <span className="absolute left-2 top-1.5 text-xs text-red-500 font-bold">₹</span>
@@ -213,7 +216,7 @@ export default function MyRecords() {
                             </div>
                         ))}
                     </div>
-                    <p className="text-xs text-charcoal-300 font-body text-right">कुल: <strong className="text-red-500">₹{fmt(totalPurchases)}</strong></p>
+                    <p className="text-xs text-charcoal-300 font-body text-right">{t("rec.total", "Total:")} <strong className="text-red-500">₹{fmt(totalPurchases)}</strong></p>
                 </div>
             )}
 
@@ -254,19 +257,19 @@ export default function MyRecords() {
                     <div className="flex items-center justify-between">
                         <h3 className="font-heading text-sm font-bold text-charcoal-500">👥 {t("rec.tab.contacts")}</h3>
                         <div className="flex gap-1.5">
-                            <button onClick={() => addContact("customer")} className="btn-primary !text-[10px] !px-2 !py-1">+ ग्राहक</button>
-                            <button onClick={() => addContact("supplier")} className="btn-subtle !text-[10px] !px-2 !py-1">+ आपूर्तिकर्ता</button>
+                            <button onClick={() => addContact("customer")} className="btn-primary !text-[10px] !px-2 !py-1">{t("rec.addCustomer", "+ Customer")}</button>
+                            <button onClick={() => addContact("supplier")} className="btn-subtle !text-[10px] !px-2 !py-1">{t("rec.addSupplier", "+ Supplier")}</button>
                         </div>
                     </div>
                     <div className="space-y-2">
                         {erpData.contacts.map((c) => (
                             <div key={c.id} className="bg-warmgray-100 rounded-xl p-3 border border-warmgray-200 flex flex-col sm:flex-row gap-2 sm:items-center">
                                 <span className={`badge text-[10px] ${c.type === "customer" ? "bg-forest-500/10 text-forest-600 border-forest-400/30" : "bg-blue-50 text-blue-600 border-blue-200"} border`}>
-                                    {c.type === "customer" ? "ग्राहक" : "सप्लायर"}
+                                    {c.type === "customer" ? t("rec.customer", "Customer") : t("rec.supplier", "Supplier")}
                                 </span>
-                                <input type="text" value={c.name} onChange={(e) => updateField("contacts", c.id, "name", e.target.value)} placeholder="नाम"
+                                <input type="text" value={c.name} onChange={(e) => updateField("contacts", c.id, "name", e.target.value)} placeholder={t("rec.placeholder.name", "Name")}
                                     className="bg-white border border-warmgray-200 rounded-lg px-2 py-1.5 text-xs font-body flex-1" />
-                                <input type="tel" value={c.phone} onChange={(e) => updateField("contacts", c.id, "phone", e.target.value)} placeholder="फ़ोन"
+                                <input type="tel" value={c.phone} onChange={(e) => updateField("contacts", c.id, "phone", e.target.value)} placeholder={t("rec.placeholder.phone", "Phone")}
                                     className="bg-white border border-warmgray-200 rounded-lg px-2 py-1.5 text-xs font-body w-36" />
                                 <button onClick={() => removeItem("contacts", c.id)} className="text-red-400 hover:text-red-600 p-1"><Trash2 className="w-3.5 h-3.5" /></button>
                             </div>
@@ -281,8 +284,8 @@ export default function MyRecords() {
                     <div className="flex items-center justify-between">
                         <h3 className="font-heading text-sm font-bold text-charcoal-500">📖 {t("rec.tab.ledgers")}</h3>
                         <div className="flex gap-1.5">
-                            <button onClick={() => addLedger("receivable")} className="btn-primary !text-[10px] !px-2 !py-1">+ उधारी</button>
-                            <button onClick={() => addLedger("payable")} className="btn-subtle !text-[10px] !px-2 !py-1">+ देनदारी</button>
+                            <button onClick={() => addLedger("receivable")} className="btn-primary !text-[10px] !px-2 !py-1">{t("rec.addReceivable", "+ Credit Given")}</button>
+                            <button onClick={() => addLedger("payable")} className="btn-subtle !text-[10px] !px-2 !py-1">{t("rec.addPayable", "+ Debt Owed")}</button>
                         </div>
                     </div>
                     <div className="space-y-2">
@@ -291,9 +294,9 @@ export default function MyRecords() {
                                 className={`rounded-xl p-3 border flex flex-col sm:flex-row gap-2 sm:items-center ${l.settled ? "bg-warmgray-100 border-warmgray-200 opacity-60" : l.type === "receivable" ? "bg-forest-500/5 border-forest-400/20" : "bg-red-50 border-red-200"
                                     }`}>
                                 <span className={`badge text-[10px] border ${l.type === "receivable" ? "bg-forest-500/10 text-forest-600 border-forest-400/30" : "bg-red-100 text-red-600 border-red-200"}`}>
-                                    {l.type === "receivable" ? "उधारी (owed to me)" : "देनदारी (I owe)"}
+                                    {l.type === "receivable" ? t("rec.owedToMe", "Receivable (owed to me)") : t("rec.iOwe", "Payable (I owe)")}
                                 </span>
-                                <input type="text" value={l.name} onChange={(e) => updateField("ledgers", l.id, "name", e.target.value)} placeholder="नाम"
+                                <input type="text" value={l.name} onChange={(e) => updateField("ledgers", l.id, "name", e.target.value)} placeholder={t("rec.placeholder.name", "Name")}
                                     className="bg-white border border-warmgray-200 rounded-lg px-2 py-1.5 text-xs font-body flex-1" />
                                 <div className="relative">
                                     <span className="absolute left-2 top-1.5 text-xs font-bold text-charcoal-400">₹</span>
@@ -304,7 +307,7 @@ export default function MyRecords() {
                                     className="bg-white border border-warmgray-200 rounded-lg px-2 py-1.5 text-xs font-body w-32" />
                                 <button onClick={() => toggleLedger(l.id)}
                                     className={`badge text-[10px] border cursor-pointer ${l.settled ? "bg-warmgray-200 text-charcoal-400 border-warmgray-300" : "bg-forest-500/10 text-forest-600 border-forest-400/30"}`}>
-                                    {l.settled ? "↩ पुनः खोलें" : "✅ निपटान करें"}
+                                    {l.settled ? t("rec.reopen", "↩ Reopen") : t("rec.settle", "✅ Settle")}
                                 </button>
                             </div>
                         ))}
@@ -333,18 +336,18 @@ export default function MyRecords() {
                             {healthLabel}
                         </span>
                         <p className="text-xs text-charcoal-400 font-body max-w-xs">
-                            {healthScore >= 70 ? "आपका व्यवसाय अच्छी स्थिति में है! विस्तार का सही समय।" : healthScore >= 45 ? "कुछ सुधार की ज़रूरत है — नीचे सलाह देखें।" : "तत्काल सुधार ज़रूरी — स्टॉक, उधारी और खर्च पर ध्यान दें!"}
+                            {healthScore >= 70 ? t("rec.healthAdvice.good", "Your business is in good shape! Good time to expand.") : healthScore >= 45 ? t("rec.healthAdvice.fair", "Some improvement needed — see advice below.") : t("rec.healthAdvice.poor", "Urgent improvement needed — focus on stock, credit, and costs!")}
                         </p>
                     </div>
 
                     {/* Factors breakdown */}
                     <div className="card-warm p-5 space-y-3">
-                        <h3 className="font-heading text-sm font-bold text-charcoal-500">📊 स्कोर कारक विश्लेषण</h3>
+                        <h3 className="font-heading text-sm font-bold text-charcoal-500">📊 {t("rec.healthFactorAnalysis", "Health Factor Breakdown")}</h3>
                         {[
-                            { label: "कैश फ्लो", good: cashFlow > 0, note: cashFlow >= 0 ? `+₹${fmt(cashFlow)} सकारात्मक` : `₹${fmt(cashFlow)} नकारात्मक — खर्च कम करें` },
-                            { label: "लाभ मार्जिन", good: totalSales > totalPurchases * 1.3, note: totalSales > totalPurchases * 1.3 ? "30%+ मार्जिन — बेहतरीन!" : "मार्जिन कम — मूल्य बढ़ाएं या लागत घटाएं" },
-                            { label: "स्टॉक स्तर", good: lowStockItems.length === 0, note: lowStockItems.length === 0 ? "सभी आइटम पर्याप्त" : `${lowStockItems.length} आइटम कम — ऑर्डर करें` },
-                            { label: "उधारी वसूली", good: pendingReceivables.length === 0, note: pendingReceivables.length === 0 ? "कोई बकाया नहीं" : `${pendingReceivables.length} ग्राहक से ₹${fmt(pendingReceivables.reduce((s, l) => s + l.amount, 0))} बकाया` },
+                            { label: t("rec.factor.cashFlow", "Cash Flow"), good: cashFlow > 0, note: cashFlow >= 0 ? `+₹${fmt(cashFlow)} ${t("rec.note.positiveCash", "Positive")}` : `₹${fmt(cashFlow)} ${t("rec.note.negativeCash", "Negative — reduce expenses")}` },
+                            { label: t("rec.factor.margin", "Profit Margin"), good: totalSales > totalPurchases * 1.3, note: totalSales > totalPurchases * 1.3 ? t("rec.note.goodMargin", "30%+ margin — Great!") : t("rec.note.lowMargin", "Low margin — increase price or reduce costs") },
+                            { label: t("rec.factor.stock", "Stock Level"), good: lowStockItems.length === 0, note: lowStockItems.length === 0 ? t("rec.note.stockAdequate", "All items adequate") : `${lowStockItems.length} ${t("rec.note.stockLow", "items low — reorder")}` },
+                            { label: t("rec.factor.credit", "Credit Recovery"), good: pendingReceivables.length === 0, note: pendingReceivables.length === 0 ? t("rec.note.noCreditDue", "No pending receivables") : `${pendingReceivables.length} ${t("rec.note.creditDue", "customers have pending debt")} (₹${fmt(pendingReceivables.reduce((s, l) => s + l.amount, 0))})` },
                         ].map((f, i) => (
                             <div key={i} className={`rounded-xl p-3 border flex items-center gap-3 ${f.good ? "bg-forest-500/5 border-forest-400/20" : "bg-red-50 border-red-200"}`}>
                                 {f.good ? <Check className="w-4 h-4 text-forest-500 shrink-0" /> : <AlertTriangle className="w-4 h-4 text-red-500 shrink-0" />}
